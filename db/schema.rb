@@ -10,7 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_13_230358) do
+ActiveRecord::Schema.define(version: 2020_04_13_231508) do
+
+  create_table "produce", force: :cascade do |t|
+    t.string "name"
+    t.integer "quantity"
+  end
 
   create_table "farms", force: :cascade do |t|
     t.string "name"
