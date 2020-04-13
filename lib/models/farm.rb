@@ -1,3 +1,3 @@
-class Farm <ActiveRecord::Base
-
+class Farm < ActiveRecord::Base
+  
 end
