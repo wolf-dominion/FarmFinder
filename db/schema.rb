@@ -17,4 +17,8 @@ ActiveRecord::Schema.define(version: 2020_04_13_231508) do
     t.integer "quantity"
   end
 
+  create_table "farms", force: :cascade do |t|
+    t.string "name"
+  end
+
 end
