@@ -30,4 +30,4 @@ ActiveRecord::Schema.define(version: 2020_04_14_164237) do
 
   add_foreign_key "farm_products", "farms", column: "farms_id"
   add_foreign_key "farm_products", "products", column: "products_id"
-end
+
