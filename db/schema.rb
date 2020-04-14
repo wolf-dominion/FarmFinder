@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_14_164237) do
+ActiveRecord::Schema.define(version: 2020_04_14_222122) do
 
   create_table "farm_products", force: :cascade do |t|
     t.integer "farms_id"
     t.integer "products_id"
+    t.integer "quantity"
     t.index ["farms_id"], name: "index_farm_products_on_farms_id"
     t.index ["products_id"], name: "index_farm_products_on_products_id"
   end
@@ -25,9 +26,8 @@ ActiveRecord::Schema.define(version: 2020_04_14_164237) do
 
   create_table "products", force: :cascade do |t|
     t.string "name"
-    t.integer "quantity"
   end
 
   add_foreign_key "farm_products", "farms", column: "farms_id"
   add_foreign_key "farm_products", "products", column: "products_id"
-
+end
