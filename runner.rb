@@ -1,6 +1,9 @@
 require_relative 'config/environment'
 
-# Cli.new.start_game
-binding.pry
+
+cli = Cli.new("Hannah")
+cli.run
+
+#binding.pry
 
 
