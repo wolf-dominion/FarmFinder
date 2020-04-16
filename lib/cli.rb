@@ -51,7 +51,7 @@ class Cli
         farm_id = farm.id
         farm_product_array = FarmProduct.where(farm_id: farm.id)
         if farm.website == nil
-            puts "\nWebsite: no website available"  
+            puts "\nWebsite: website unavailable"  
         else 
             print "\nWebsite: " 
             puts"#{farm.website}".colorize(:blue)
@@ -101,7 +101,13 @@ class Cli
         food_array.each do |n|
             farmId = n.farm_id
             farm = Farm.all.find_by(id: farmId)
-            puts "#{selection}: #{n.quantity} available at #{farm.name}."
+            
+            if farm.website == nil
+                puts "#{selection}: #{n.quantity} available at #{farm.name} | Website: not available"
+            else
+                print "#{selection}: #{n.quantity} available at #{farm.name} | Website: "
+                print "#{farm.website}\n".colorize(:blue)
+            end
         end
     end
 
@@ -115,20 +121,8 @@ class Cli
         product_listing = Product.find_by(name: user_search)
         if product_listing
             food_selection(user_search)
-        
         else
             puts "None of the farms near Denver have #{user_search} right now."
-            #return_to_main_menu_question
         end
     end
-
-    # def return_to_main_menu_question
-    #     prompt = TTY::Prompt.new
-    #     answer = prompt.yes?('Return to main menu?(n will end program)')
-    #         if answer == true
-    #             main_menu
-    #         else
-    #             exit
-    #         end
-    # end
 end
