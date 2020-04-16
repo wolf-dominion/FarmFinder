@@ -9,9 +9,13 @@ class Cli
         @welcome = true
     end
 
-    def run
-        while @run == true do 
-            main_menu
+    def menu_question 
+        puts ""    
+        prompt = TTY::Prompt.new
+            selection = prompt.select("Options".underline) do |menu|
+            menu.choice 'Return to main menu', -> {main_menu}
+            menu.choice 'Exit Denver Farm Finder', -> { exit }
+            puts ""
         end
     end
 
@@ -44,6 +48,7 @@ class Cli
         selection = prompt.select("Farm List", list_farm_names)
        
         farm_selection(selection)
+        menu_question
     end
     
     def farm_selection(selection)
