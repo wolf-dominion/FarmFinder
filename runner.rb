@@ -11,13 +11,4 @@ user_name = gets.chomp
 user = User.new(user_name)
 
 cli = Cli.new(user)
-cli.run
-
-
-#app = App.new(user)
-#app.search_by_food_intro
-
-
-#binding.pry
-
-
+cli.welcome_message
