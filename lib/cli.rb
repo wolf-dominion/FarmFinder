@@ -42,23 +42,23 @@ class Cli
 
         prompt = TTY::Prompt.new
         selection = prompt.select("Farm List", list_farm_names)
-
-        def farm_selection(selection)
-            farm = Farm.all.find_by(name: selection)
-            farm_id = farm.id
-            farm_product_array = FarmProduct.where(farm_id: farm.id)
-
-            farm_product_array.each do |n|
-                product_id = n.product_id # 1
-                product = Product.all.find_by(id: product_id) #product instance
-                product_name = product.name #product name
-
-                puts "#{n.quantity} #{product_name}"
-            end
-        end
         puts ""
-        puts "#{selection} Inventory"
+        puts "#{selection} Inventory:"
         farm_selection(selection)
+    end
+    
+    def farm_selection(selection)
+        farm = Farm.all.find_by(name: selection)
+        farm_id = farm.id
+        farm_product_array = FarmProduct.where(farm_id: farm.id)
+
+        farm_product_array.each do |n|
+            product_id = n.product_id # 1
+            product = Product.all.find_by(id: product_id) #product instance
+            product_name = product.name #product name
+
+            puts "#{product_name}: #{n.quantity}"
+        end
     end
 
     def list_farm_names
@@ -83,61 +83,46 @@ class Cli
 
         prompt = TTY::Prompt.new
         selection = prompt.select("Food List", list_food_names)
-
-        def food_selection(selection)
-            food = Product.all.find_by(name: selection)
-            food_id = food.id
-            food_array = FarmProduct.where(product_id: food_id)
-
-            food_array.each do |n|
-                farmId = n.farm_id
-                farm = Farm.all.find_by(id: farmId)
-                puts "#{n.quantity} #{selection} are available at #{farm.name}."
-            end
-        end
-
         puts ""
         food_selection(selection)
+    end
 
-        # #all_food_objects = Product.all
-        # all_food_names = Product.all.map do |food|
-        #     food.name
-        # end
+    def food_selection(selection)
+        food = Product.all.find_by(name: selection)
+        food_id = food.id
+        food_array = FarmProduct.where(product_id: food_id)
 
-        # prompt = TTY::Prompt.new
-        # selection = prompt.select("What food are you looking for?", all_food_names)
-        # all_farm_products = FarmProduct.where(name: selection)
-        # #binding.pry
-        # farm_name = all_farm_products.farms.name
-        # # all_farm_products.map do |farmproduct|
-        # #     farmproduct.
-        # puts "#{selection} are available at #{farm_name}."
-        
+        food_array.each do |n|
+            farmId = n.farm_id
+            farm = Farm.all.find_by(id: farmId)
+            puts "#{selection}: #{n.quantity} available at #{farm.name}."
+        end
     end
 
 #Option 3: Search by Food
 
     def search_by_food_intro
         puts "What local food item can we help you find?"
-        user_search = gets.chomp.capitalize
+        print "Begin typing: "
+        user_search = gets.chomp.capitalize()
        
         product_listing = Product.find_by(name: user_search)
         if product_listing
-            puts "#{user_search} is available."
-            #puts "#{user_search} is available at #{product_listing.farms.name}"
+            food_selection(user_search)
+        
         else
             puts "None of the farms near Denver have #{user_search} right now."
-            return_to_main_menu_question
+            #return_to_main_menu_question
         end
     end
 
-    def return_to_main_menu_question
-        prompt = TTY::Prompt.new
-        answer = prompt.yes?('Return to main menu?')
-            if answer == true
-                main_menu
-            else
-                exit
-            end
-    end
+    # def return_to_main_menu_question
+    #     prompt = TTY::Prompt.new
+    #     answer = prompt.yes?('Return to main menu?(n will end program)')
+    #         if answer == true
+    #             main_menu
+    #         else
+    #             exit
+    #         end
+    # end
 end
