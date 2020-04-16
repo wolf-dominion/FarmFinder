@@ -8,14 +8,23 @@ class Cli
         @choice = "main"
     end
 
+    def run
+        while @choice != 'quit' do 
+            main_menu
+        end
+    end
+
     def main_menu
+        puts "___________"
         puts ""
-        puts "OPTIONS"
+        puts "Type the number corresponding to the action you want and press enter."
+        puts "Otherwise, type 'Quit' and press enter to exit program"
+        puts "___________"
         puts ""
-        puts "1. Search by farm  |   2. Search by food" 
-        puts "3. List all farms  |  4. List all food"
-        puts "Type a number and press enter to get started."
-        puts "Type 'main' to return to the main menu , type 'control C' to quit the program."
+        puts "1. Search by farm"
+        puts "2. Search by food" 
+        #puts "3. List all farms"
+        #puts "4. List all food"
         puts ""
         navigation
     end
@@ -27,12 +36,12 @@ class Cli
             print_farm_name_list
         elsif input == "2"
             search_by_food_intro
-        elsif input == "main"
-            puts "You are already in the main menu"
-            # main_menu
+        elsif input == "quit"
+            @choice = "quit"
+            run
         else
             puts "Please enter a valid command"
-            main_menu
+            navigation
         end
     end
 
@@ -42,10 +51,8 @@ class Cli
         prompt = TTY::Prompt.new
         selection = prompt.select("Farm List", list_farm_names)
 
-        #Currently working on making the below if-statements dynamic rather than hard coded. Feel free 
-        # to work on it or anything you want
-        if selection == list_farm_names[0]#"El Dorado"
-            farm = Farm.all.find_by(name: "El Dorado Farms")
+        def farm_selection(selection)
+            farm = Farm.all.find_by(name: selection)
             farmId = farm.id
             farmProductArray = FarmProduct.where(farm_id: farm.id)
 
@@ -56,48 +63,12 @@ class Cli
 
                 puts "#{productName}: #{n.quantity} "
             end
-
-        elsif selection == "Sunspot"
-            farm = Farm.find_by(name: "Sunspot")
-            puts "#{farm} has: "
-
-
-        elsif selection == "Raisin Roots"
-           farm = Farm.find_by(name: "Raisin Roots")
-           puts "#{farm} has: "
-
-
         end
 
-    end
-
-    def search_by_farm_input
-        
-        print "Your input: "
-        
-        input = gets.chomp
-        
-        puts "Farm info: "
-        # farm names are listed out numerically
-        # user inputs number corresponding to farm name
-        # code finds the index + 1 from array of all farms
-        # After farm instance is selected, display the farm's produce name (produce id) and quantity (farm produce id and then attribute)
-        
-        # farmName = Farm.all.(input.to_i + 1).name 
-        # farmId = Farm.all.(input.to_i + 1).id
-        
-        # result = FarmProduct.all.select do |fp|
-        #     fp.farm_id == farmId
-        # end
-
-        # result.each do |n|
-        #     puts "There is: #{n}"
-        # end
-
+        farm_selection(selection)
     end
 
 #Lydia's portion of code   
-#binding.pry
 
     def search_by_food_intro
         puts "Hello #{user.name}! What local food item can we help you find?"
@@ -181,6 +152,5 @@ class Cli
             farm.name
         end
         all_farm_names
-    end 
-
+    end
 end

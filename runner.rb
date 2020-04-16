@@ -7,7 +7,7 @@ user_name = gets.chomp
 user = User.new(user_name)
 
 cli = Cli.new(user)
-cli.main_menu
+cli.run
 
 
 #app = App.new(user)
