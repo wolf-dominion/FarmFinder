@@ -10,7 +10,7 @@ class Cli
     end
 
     def run
-        while @run = true do 
+        while @run == true do 
             main_menu
         end
     end
@@ -42,8 +42,7 @@ class Cli
 
         prompt = TTY::Prompt.new
         selection = prompt.select("Farm List", list_farm_names)
-        puts ""
-        puts "#{selection} Inventory:"
+       
         farm_selection(selection)
     end
     
@@ -51,6 +50,13 @@ class Cli
         farm = Farm.all.find_by(name: selection)
         farm_id = farm.id
         farm_product_array = FarmProduct.where(farm_id: farm.id)
+        if farm.website == nil
+            puts "\nWebsite: no website available"  
+        else 
+            print "\nWebsite: " 
+            puts"#{farm.website}".colorize(:blue)
+        end
+        puts "Inventory:"
 
         farm_product_array.each do |n|
             product_id = n.product_id # 1
