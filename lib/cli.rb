@@ -14,16 +14,20 @@ class Cli
         end
     end
 
+#Main Menu
+
     def new_main_menu
-        puts "\nWelcome #{user.name.capitalize}! How'd you like to search for local food?" #use colorize gem to make bold!
+        puts "\nWelcome #{user.name.capitalize}! How'd you like to search for local food?\n".colorize(:light_blue) #use colorize gem to make bold!
         prompt = TTY::Prompt.new
-        selection = prompt.select("Main Menu") do |menu|
+        selection = prompt.select("Main Menu".underline) do |menu|
             menu.choice 'Choose a local farm', -> { print_farm_name_list }
             menu.choice 'Choose from available food', -> { choose_from_food }
             menu.choice 'Search by food', -> { search_by_food_intro }
             menu.choice 'Exit Denver Farm Finder', -> { exit }
         end
     end
+
+#Option 1: Choose a local farm
 
     def print_farm_name_list
         puts ""
@@ -55,7 +59,7 @@ class Cli
         all_farm_names
     end
 
-#Lydia's portion of code   
+#Option 2: Choose a local food
 
     def choose_from_food
         puts '\n'
@@ -76,6 +80,8 @@ class Cli
         
     end
 
+#Option 3: Search by Food
+
     def search_by_food_intro
         puts "What local food item can we help you find?"
         user_search = gets.chomp.capitalize
@@ -90,15 +96,8 @@ class Cli
         end
     end
 
+    
     def return_to_main_menu_question
-        # puts "Would you like to return to the main menu? (Type 'yes' or 'no') "
-        # print "Your input: "
-        # input = gets.chomp
-        # if input == 'yes'
-        #     main_menu
-        # else input == 'no'
-        #     quit_question
-        # end
         prompt = TTY::Prompt.new
         answer = prompt.yes?('Return to main menu?')
             if answer == true
@@ -107,59 +106,6 @@ class Cli
                 exit
             end
     end
-
-    def quit_question
-        puts "Do you want to quit the program?"
-        print "Your input: "
-        input = gets.chomp
-        if input == 'yes'
-            exit
-        else input == 'no'
-            main_menu
-        end
-    end
-
-    def choice_to_list_food
-        puts "Would you like to see a list all the food available now? (Type 'yes' or 'no')."
-        input = gets.chomp.downcase
-
-        if input == 'yes'
-            list_food
-        else input == 'no'
-            choice_to_list_farms
-        end
-    end
-
-    def choice_to_list_farms
-        puts "Would you like to see all the farms in your area? (Type 'yes' or 'no')."
-        input = gets.chomp.downcase
-
-        if input == 'yes'
-            list_farms
-        else input == 'no'
-            search_by_food_intro
-            #return to main menu method
-        end
-    end
-
-    def list_food
-        all_food_names = Product.all.map do |food|
-            food.name
-        end
-        puts "Here what's available in your area:"
-        puts all_food_names
-    end
-
-    def list_farms
-        all_farm_names = Farm.all.map do |farm|
-            farm.name
-        end
-        puts "Here are the farms in your area:"
-        puts all_farm_names
-        all_farm_names
-    end  
-
-    
 
 
 #THIS IS THE METHOD CEMETARY (R.I.P.)
@@ -193,5 +139,57 @@ class Cli
     #         navigation
     #     end
     # end
+
+    # def choice_to_list_farms
+        #     puts "Would you like to see all the farms in your area? (Type 'yes' or 'no')."
+        #     input = gets.chomp.downcase
+    
+        #     if input == 'yes'
+        #         list_farms
+        #     else input == 'no'
+        #         search_by_food_intro
+        #         #return to main menu method
+        #     end
+        # end
+
+     # def quit_question
+    #     puts "Do you want to quit the program?"
+    #     print "Your input: "
+    #     input = gets.chomp
+    #     if input == 'yes'
+    #         exit
+    #     else input == 'no'
+    #         main_menu
+    #     end
+    # end
+
+    # def choice_to_list_food
+    #     puts "Would you like to see a list all the food available now? (Type 'yes' or 'no')."
+    #     input = gets.chomp.downcase
+
+    #     if input == 'yes'
+    #         list_food
+    #     else input == 'no'
+    #         choice_to_list_farms
+    #     end
+    # end
+
+    # def list_food
+    #     all_food_names = Product.all.map do |food|
+    #         food.name
+    #     end
+    #     puts "Here what's available in your area:"
+    #     puts all_food_names
+    # end
+
+    # def list_farms
+    #     all_farm_names = Farm.all.map do |farm|
+    #         farm.name
+    #     end
+    #     puts "Here are the farms in your area:"
+    #     puts all_farm_names
+    #     all_farm_names
+    # end  
+
 
 end
