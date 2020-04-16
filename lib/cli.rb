@@ -1,26 +1,23 @@
 require 'pp'
 
 class Cli
-    attr_accessor :user, :run, :welcome
+    attr_accessor :user, :welcome
 
     def initialize(user)
         @user = user
-        @run = true
         @welcome = true
     end
 
-    def menu_question 
-        puts ""    
+    def menu_question   
         prompt = TTY::Prompt.new
-            selection = prompt.select("Options".underline) do |menu|
+            selection = prompt.select("\nOptions".underline) do |menu|
             menu.choice 'Return to main menu', -> {main_menu}
-            menu.choice 'Exit Denver Farm Finder', -> { exit }
-            puts ""
+            menu.choice 'Exit Denver Farm Finder', -> { puts "Good bye #{@user.name}!\n"}
         end
     end
 
     def welcome_message
-        puts "\nWelcome #{user.name.capitalize}! How'd you like to search for local food?" #use colorize gem to make bold!
+        puts "\nWelcome #{user.name}! How'd you like to search for local food?"
         @welcome = false
         main_menu
     end
@@ -29,9 +26,8 @@ class Cli
         if @welcome == true 
             welcome_message
         end
-        puts ""
         prompt = TTY::Prompt.new
-        selection = prompt.select("Main Menu".underline) do |menu|
+        selection = prompt.select("\nMain Menu".underline) do |menu|
             menu.choice 'Choose a local farm', -> { print_farm_name_list }
             menu.choice 'Choose from available food', -> { choose_from_food }
             menu.choice 'Search by food', -> { search_by_food_intro }
@@ -42,10 +38,8 @@ class Cli
 #Option 1: Choose a local farm
 
     def print_farm_name_list
-        puts ""
-
         prompt = TTY::Prompt.new
-        selection = prompt.select("Farm List", list_farm_names)
+        selection = prompt.select("\nFarm List", list_farm_names)
        
         farm_selection(selection)
         menu_question
@@ -90,12 +84,11 @@ class Cli
 
 
     def choose_from_food
-        puts ""
-
         prompt = TTY::Prompt.new
-        selection = prompt.select("Food List", list_food_names)
-        puts ""
+        selection = prompt.select("\nFood List: ", list_food_names)
+        
         food_selection(selection)
+        menu_question
     end
 
     def food_selection(selection)
@@ -108,10 +101,9 @@ class Cli
             farm = Farm.all.find_by(id: farmId)
             
             if farm.website == nil
-                puts "#{selection}: #{n.quantity} available at #{farm.name} | Website: not available"
+                puts "#{n.quantity} available at #{farm.name} | Website: not available"
             else
-                print "#{selection}: #{n.quantity} available at #{farm.name} | Website: "
-                print "#{farm.website}\n".colorize(:blue)
+                puts "#{n.quantity} available at #{farm.name} | Website: " + "#{farm.website}".colorize(:blue)
             end
         end
     end
@@ -126,8 +118,10 @@ class Cli
         product_listing = Product.find_by(name: user_search)
         if product_listing
             food_selection(user_search)
+            menu_question
         else
             puts "None of the farms near Denver have #{user_search} right now."
+            menu_question
         end
     end
 end
