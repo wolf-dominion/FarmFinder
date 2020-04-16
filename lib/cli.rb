@@ -10,38 +10,18 @@ class Cli
 
     def run
         while @choice != 'quit' do 
-            main_menu
+            new_main_menu
         end
     end
 
-    def main_menu
-        puts "___________"
-        puts ""
-        puts "Type the number corresponding to the action you want and press enter."
-        puts "Otherwise, type 'Quit' and press enter to exit program"
-        puts "___________"
-        puts ""
-        puts "1. Search by farm"
-        puts "2. Search by food" 
-        #puts "3. List all farms"
-        #puts "4. List all food"
-        puts ""
-        navigation
-    end
-
-    def navigation
-        print "Your input: "
-        input = gets.chomp
-        if input == "1"
-            print_farm_name_list
-        elsif input == "2"
-            search_by_food_intro
-        elsif input == "quit"
-            @choice = "quit"
-            run
-        else
-            puts "Please enter a valid command"
-            navigation
+    def new_main_menu
+        puts "\nWelcome #{user.name.capitalize}! How'd you like to search for local food?" #use colorize gem to make bold!
+        prompt = TTY::Prompt.new
+        selection = prompt.select("Main Menu") do |menu|
+            menu.choice 'Choose a local farm', -> { print_farm_name_list }
+            menu.choice 'Choose from available food', -> { choose_from_food }
+            menu.choice 'Search by food', -> { search_by_food_intro }
+            menu.choice 'Exit Denver Farm Finder', -> { exit }
         end
     end
 
@@ -53,27 +33,52 @@ class Cli
 
         def farm_selection(selection)
             farm = Farm.all.find_by(name: selection)
-            farmId = farm.id
-            farmProductArray = FarmProduct.where(farm_id: farm.id)
+            farm_id = farm.id
+            farm_product_array = FarmProduct.where(farm_id: farm.id)
 
-            farmProductArray.each do |n|
-                productId = n.product_id # 1
-                product = Product.all.find_by(id: productId) #product instance
-                productName = product.name #product name
+            farm_product_array.each do |n|
+                product_id = n.product_id # 1
+                product = Product.all.find_by(id: product_id) #product instance
+                product_name = product.name #product name
 
-                puts "#{productName}: #{n.quantity} "
+                puts "#{n.quantity} #{product_name}"
             end
         end
-
+        puts "#{selection} Inventory"
         farm_selection(selection)
+    end
+
+    def list_farm_names
+        all_farm_names = Farm.all.map do |farm|
+            farm.name
+        end
+        all_farm_names
     end
 
 #Lydia's portion of code   
 
+    def choose_from_food
+        puts '\n'
+
+        all_food_objects = Product.all
+        all_food_names = Product.all.map do |food|
+            food.name
+        end
+
+        prompt = TTY::Prompt.new
+        selection = prompt.select("What food are you looking for?", all_food_names)
+        all_farm_products = FarmProduct.where(name: selection)
+        binding.pry
+        farm_name = all_farm_products.farms.name
+        # all_farm_products.map do |farmproduct|
+        #     farmproduct.
+        puts "#{selection} are available at #{farm_name}."
+        
+    end
+
     def search_by_food_intro
-        puts "Hello #{user.name}! What local food item can we help you find?"
+        puts "What local food item can we help you find?"
         user_search = gets.chomp.capitalize
-        #Have to strip user inmput even more - ex. tomatoes = tomato
        
         product_listing = Product.find_by(name: user_search)
         if product_listing
@@ -86,14 +91,21 @@ class Cli
     end
 
     def return_to_main_menu_question
-        puts "Would you like to return to the main menu? (Type 'yes' or 'no') "
-        print "Your input: "
-        input = gets.chomp
-        if input == 'yes'
-            main_menu
-        else input == 'no'
-            quit_question
-        end
+        # puts "Would you like to return to the main menu? (Type 'yes' or 'no') "
+        # print "Your input: "
+        # input = gets.chomp
+        # if input == 'yes'
+        #     main_menu
+        # else input == 'no'
+        #     quit_question
+        # end
+        prompt = TTY::Prompt.new
+        answer = prompt.yes?('Return to main menu?')
+            if answer == true
+                new_main_menu
+            else
+                exit
+            end
     end
 
     def quit_question
@@ -147,10 +159,39 @@ class Cli
         all_farm_names
     end  
 
-    def list_farm_names
-        all_farm_names = Farm.all.map do |farm|
-            farm.name
-        end
-        all_farm_names
-    end
+    
+
+
+#THIS IS THE METHOD CEMETARY (R.I.P.)
+ # def main_menu
+    #     puts "___________"
+    #     puts ""
+    #     puts "Type the number corresponding to the action you want and press enter."
+    #     puts "Otherwise, type 'Quit' and press enter to exit program"
+    #     puts "___________"
+    #     puts ""
+    #     puts "1. Search by farm"
+    #     puts "2. Search by food" 
+    #     #puts "3. List all farms"
+    #     #puts "4. List all food"
+    #     puts ""
+    #     navigation
+    # end
+
+    # def navigation
+    #     print "Your input: "
+    #     input = gets.chomp
+    #     if input == "1"
+    #         print_farm_name_list
+    #     elsif input == "2"
+    #         search_by_food_intro
+    #     elsif input == "quit"
+    #         @choice = "quit"
+    #         run
+    #     else
+    #         puts "Please enter a valid command"
+    #         navigation
+    #     end
+    # end
+
 end

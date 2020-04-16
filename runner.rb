@@ -3,6 +3,7 @@ require_relative 'config/environment'
 puts "Welcome to Denver Farm Finder!"
 puts "What's your name?"
 user_name = gets.chomp
+#binding.pry
 
 user = User.new(user_name)
 
