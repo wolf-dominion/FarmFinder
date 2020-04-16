@@ -1,3 +1,5 @@
+require 'pp'
+
 class Cli
     attr_accessor :user, :choice
 
@@ -6,14 +8,23 @@ class Cli
         @choice = "main"
     end
 
+    def run
+        while @choice != 'quit' do 
+            main_menu
+        end
+    end
+
     def main_menu
+        puts "___________"
         puts ""
-        puts "OPTIONS"
+        puts "Type the number corresponding to the action you want and press enter."
+        puts "Otherwise, type 'Quit' and press enter to exit program"
+        puts "___________"
         puts ""
-        puts "1. Search by farm  |   2. Search by food" 
-        puts "3. List all farms   |  4. List all food"
-        puts "Type a number and press enter to get started."
-        puts "Type 'main' to return to the main menu , type 'control C' to quit the program."
+        puts "1. Search by farm"
+        puts "2. Search by food" 
+        #puts "3. List all farms"
+        #puts "4. List all food"
         puts ""
         navigation
     end
@@ -22,107 +33,42 @@ class Cli
         print "Your input: "
         input = gets.chomp
         if input == "1"
-            search_by_farm
+            print_farm_name_list
         elsif input == "2"
             search_by_food_intro
-        elsif input == "main"
-            puts "You are already in the main menu"
-            # main_menu
+        elsif input == "quit"
+            @choice = "quit"
+            run
         else
             puts "Please enter a valid command"
-            main_menu
+            navigation
         end
-    end
-
-    def get_choice_input
-        print "Your input: " 
-        @choice = gets.chomp
-    end
-
-    def actions
-        if @choice == '1' 
-            puts ""
-            puts "Farm results:"
-            
-        elsif @choice == '2'
-            puts ""
-            puts "Choice is 2 is being implemented"
-            run
-        elsif @choice == "main"
-            puts ""
-            run
-        # elsif @choice == "quit"
-        #     puts ""
-        #     run
-        else
-            @choice = "try_again"
-            run
-        end
-    end
-
-    # if @choice == "main" || @choice == "quit"
-    #     principal_actions
-
-    def principal_actions
-        if @choice == "main"
-            main_menu
-        end
-    end
-
-    def search_by_farm
-        print_farm_name_list
-        puts ""
-        puts "Type farm name or number to view more information."
-        puts "Otherwise, type 'main' or 'quit'"
-        search_by_farm_input
     end
 
     def print_farm_name_list
         puts ""
-        Farm.all.each do |farm|
-            puts "#{Farm.all.index(farm) + 1}. #{farm.name}"
+
+        prompt = TTY::Prompt.new
+        selection = prompt.select("Farm List", list_farm_names)
+
+        def farm_selection(selection)
+            farm = Farm.all.find_by(name: selection)
+            farmId = farm.id
+            farmProductArray = FarmProduct.where(farm_id: farm.id)
+
+            farmProductArray.each do |n|
+                productId = n.product_id # 1
+                product = Product.all.find_by(id: productId) #product instance
+                productName = product.name #product name
+
+                puts "#{productName}: #{n.quantity} "
+            end
         end
+
+        farm_selection(selection)
     end
-
-    def search_by_farm_input
-        print "Your input: "
-        input = gets.chomp
-        puts "#{input} is working."
-        #print "Your input: "
-        #farm_name = gets.chomp
-    end
-
-    # def run
-    #     while @choice != "quit" do
-    #         if @choice == "main"
-    #             main_menu
-    #             get_choice_input
-    #             actions
-            
-    #         elsif @choice == '1'
-    #             search_by_farm
-    #             get_choice_input
-    #             actions
-            
-    #         elsif @choice == '2'
-    #             puts ""
-    #             get_choice_input
-    #             actions
-
-    #         elsif @choice == 'try_again'
-    #             puts "Please enter a valid command"
-    #             get_choice_input
-    #             actions
-    #         end
-    #     end
-    #     if @choice == 'quit'
-    #         puts "Program ended"
-    #         exit
-    #     end
-    # end
 
 #Lydia's portion of code   
-#binding.pry
 
     def search_by_food_intro
         puts "Hello #{user.name}! What local food item can we help you find?"
@@ -198,6 +144,13 @@ class Cli
         end
         puts "Here are the farms in your area:"
         puts all_farm_names
+        all_farm_names
     end  
 
+    def list_farm_names
+        all_farm_names = Farm.all.map do |farm|
+            farm.name
+        end
+        all_farm_names
+    end
 end
