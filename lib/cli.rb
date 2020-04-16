@@ -1,18 +1,31 @@
 require 'pp'
 
 class Cli
-    attr_accessor :user, :choice
+    attr_accessor :user, :run, :welcome
 
     def initialize(user)
         @user = user
-        @choice = "main"
+        @run = true
+        @welcome = true
     end
 
     def run
-        while @choice != 'quit' do 
-            new_main_menu
+        while @run = true do 
+            main_menu
         end
     end
+
+    def welcome_message
+        puts "\nWelcome #{user.name.capitalize}! How'd you like to search for local food?" #use colorize gem to make bold!
+        @welcome = false
+        main_menu
+    end
+
+    def main_menu
+        if @welcome == true 
+            welcome_message
+        end
+        puts ""
 
 #Main Menu
 
@@ -48,6 +61,7 @@ class Cli
                 puts "#{n.quantity} #{product_name}"
             end
         end
+        puts ""
         puts "#{selection} Inventory"
         farm_selection(selection)
     end
@@ -58,25 +72,51 @@ class Cli
         end
         all_farm_names
     end
+      
+    def list_food_names
+        all_food_names = Product.all.map do |product|
+            product.name
+        end
+        all_food_names
+    end
 
 #Option 2: Choose a local food
 
-    def choose_from_food
-        puts '\n'
 
-        all_food_objects = Product.all
-        all_food_names = Product.all.map do |food|
-            food.name
-        end
+    def choose_from_food
+        puts ""
 
         prompt = TTY::Prompt.new
-        selection = prompt.select("What food are you looking for?", all_food_names)
-        all_farm_products = FarmProduct.where(name: selection)
-        binding.pry
-        farm_name = all_farm_products.farms.name
-        # all_farm_products.map do |farmproduct|
-        #     farmproduct.
-        puts "#{selection} are available at #{farm_name}."
+        selection = prompt.select("Food List", list_food_names)
+
+        def food_selection(selection)
+            food = Product.all.find_by(name: selection)
+            food_id = food.id
+            food_array = FarmProduct.where(product_id: food_id)
+
+            food_array.each do |n|
+                farmId = n.farm_id
+                farm = Farm.all.find_by(id: farmId)
+                puts "#{n.quantity} #{selection} are available at #{farm.name}."
+            end
+        end
+
+        puts ""
+        food_selection(selection)
+
+        # #all_food_objects = Product.all
+        # all_food_names = Product.all.map do |food|
+        #     food.name
+        # end
+
+        # prompt = TTY::Prompt.new
+        # selection = prompt.select("What food are you looking for?", all_food_names)
+        # all_farm_products = FarmProduct.where(name: selection)
+        # #binding.pry
+        # farm_name = all_farm_products.farms.name
+        # # all_farm_products.map do |farmproduct|
+        # #     farmproduct.
+        # puts "#{selection} are available at #{farm_name}."
         
     end
 
@@ -190,6 +230,5 @@ class Cli
     #     puts all_farm_names
     #     all_farm_names
     # end  
-
 
 end

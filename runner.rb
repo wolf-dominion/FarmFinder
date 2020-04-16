@@ -7,6 +7,7 @@ puts "Welcome! FarmFinder was built to support local food economies. Here, we he
 puts "Let's get started!".colorize(:yellow)
 puts "What's your name?"
 user_name = gets.chomp
+
 #binding.pry
 
 user = User.new(user_name)
