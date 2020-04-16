@@ -67,15 +67,16 @@ class Cli
         end
         all_farm_names
     end
-
+      
     def list_food_names
         all_food_names = Product.all.map do |product|
             product.name
         end
         all_food_names
     end
-    
+
 #Option 2: Choose a local food
+
 
     def choose_from_food
         puts ""
