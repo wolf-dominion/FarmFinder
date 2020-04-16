@@ -18,7 +18,7 @@ class Cli
         puts "___________"
         puts ""
         puts "Type the number corresponding to the action you want and press enter."
-        puts "Otherwise, type 'Quit' and press enter to exit program"
+        puts "Otherwise, type 'quit' and press enter to exit program"
         puts "___________"
         puts ""
         puts "1. Search by farm"
