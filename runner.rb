@@ -1,6 +1,10 @@
 require_relative 'config/environment'
 
-puts "Welcome to Denver Farm Finder!"
+
+print "Welcome to ".bold
+puts "Denver FarmFinder\n".colorize(:light_blue).bold.underline
+puts "Welcome! FarmFinder was built to support local food economies. Here, we help you buy directly from local farms in your area."
+puts "Let's get started!".colorize(:yellow)
 puts "What's your name?"
 user_name = gets.chomp
 
