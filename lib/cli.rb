@@ -47,8 +47,7 @@ class Cli
         if farm.website == nil
             puts "\nWebsite: website unavailable"  
         else 
-            print "\nWebsite: " 
-            puts"#{farm.website}".colorize(:blue)
+            puts "\nWebsite: " + "#{farm.website}".colorize(:blue)
         end
         puts "Inventory:"
 
