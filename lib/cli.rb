@@ -10,7 +10,7 @@ class Cli
         prompt = TTY::Prompt.new
             selection = prompt.select("\nOptions".underline) do |menu|
             menu.choice 'Return to main menu', -> {main_menu}
-            menu.choice 'Exit Denver Farm Finder', -> { puts "Good bye #{@user.name}!\n"}
+            menu.choice 'Exit Denver Farm Finder', -> { puts "Good bye #{user.name}!\n"}
         end
     end
 
@@ -29,7 +29,7 @@ class Cli
             menu.choice 'Choose a local farm', -> { print_farm_name_list }
             menu.choice 'Choose from available food', -> { choose_from_food }
             menu.choice 'Search by food', -> { search_by_food_intro }
-            menu.choice 'Exit Denver Farm Finder', -> { exit }
+            menu.choice 'Exit Denver Farm Finder', -> { puts "Good bye #{user.name}!\n"}
         end
     end
 
