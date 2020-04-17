@@ -15,7 +15,7 @@ class Cli
     end
 
     def welcome_message
-        puts "\nWelcome #{user.name}! How'd you like to search for local food?"
+        puts "\nWelcome #{user.name}! How'd you like to search for local food?".colorize(:yellow)
         @welcome = false
         main_menu
     end
@@ -45,14 +45,14 @@ class Cli
     def farm_selection(selection)
         farm = Farm.all.find_by(name: selection)
         if farm.website == nil
-            puts "\nWebsite: website unavailable"  
+            puts "\nWebsite: website unavailable".colorize(:yellow)
         else 
             puts "\nWebsite: " + "#{farm.website}".colorize(:blue)
         end
-        puts "Inventory:"
+        puts "Inventory:".colorize(:yellow)
 
         farm.farm_products.each do |n|
-            puts "#{n.product.name}: #{n.quantity}"
+            puts "#{n.product.name}: #{n.quantity}".colorize(:yellow)
         end
     end
 
@@ -78,9 +78,9 @@ class Cli
         food = Product.all.find_by(name: selection)
         food.farm_products.each do |n|
             if n.farm.website == nil
-                puts "#{n.quantity} available at #{n.farm.name} | Website: not available"
+                puts "#{n.quantity} available at #{n.farm.name} | Website: not available".colorize(:yellow)
             else
-                puts "#{n.quantity} available at #{n.farm.name} | Website: " + "#{n.farm.website}".colorize(:blue)
+                puts "#{n.quantity} available at #{n.farm.name} | Website: ".colorize(:yellow) + "#{n.farm.website}".colorize(:blue)
             end
         end
     end
@@ -97,7 +97,7 @@ class Cli
             food_selection(user_search)
             menu_question
         else
-            puts "None of the farms near Denver have #{user_search} right now."
+            puts "None of the farms near Denver have #{user_search} right now.".colorize(:yellow)
             menu_question
         end
     end
