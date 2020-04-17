@@ -1,5 +1,3 @@
-require 'pp'
-
 class Cli
     attr_accessor :user, :welcome
 
@@ -40,15 +38,12 @@ class Cli
     def print_farm_name_list
         prompt = TTY::Prompt.new
         selection = prompt.select("\nFarm List", list_farm_names)
-       
         farm_selection(selection)
         menu_question
     end
     
     def farm_selection(selection)
         farm = Farm.all.find_by(name: selection)
-        farm_id = farm.id
-        farm_product_array = FarmProduct.where(farm_id: farm.id)
         if farm.website == nil
             puts "\nWebsite: website unavailable"  
         else 
@@ -57,27 +52,17 @@ class Cli
         end
         puts "Inventory:"
 
-        farm_product_array.each do |n|
-            product_id = n.product_id # 1
-            product = Product.all.find_by(id: product_id) #product instance
-            product_name = product.name #product name
-
-            puts "#{product_name}: #{n.quantity}"
+        farm.farm_products.each do |n|
+            puts "#{n.product.name}: #{n.quantity}"
         end
     end
 
     def list_farm_names
-        all_farm_names = Farm.all.map do |farm|
-            farm.name
-        end
-        all_farm_names
+        Farm.all.map {|farm| farm.name}
     end
       
     def list_food_names
-        all_food_names = Product.all.map do |product|
-            product.name
-        end
-        all_food_names
+        Product.all.map {|product| product.name}
     end
 
 #Option 2: Choose a local food
@@ -86,24 +71,17 @@ class Cli
     def choose_from_food
         prompt = TTY::Prompt.new
         selection = prompt.select("\nFood List: ", list_food_names)
-        
         food_selection(selection)
         menu_question
     end
 
     def food_selection(selection)
         food = Product.all.find_by(name: selection)
-        food_id = food.id
-        food_array = FarmProduct.where(product_id: food_id)
-
-        food_array.each do |n|
-            farmId = n.farm_id
-            farm = Farm.all.find_by(id: farmId)
-            
-            if farm.website == nil
-                puts "#{n.quantity} available at #{farm.name} | Website: not available"
+        food.farm_products.each do |n|
+            if n.farm.website == nil
+                puts "#{n.quantity} available at #{n.farm.name} | Website: not available"
             else
-                puts "#{n.quantity} available at #{farm.name} | Website: " + "#{farm.website}".colorize(:blue)
+                puts "#{n.quantity} available at #{n.farm.name} | Website: " + "#{n.farm.website}".colorize(:blue)
             end
         end
     end
