@@ -11,7 +11,7 @@ eggs = Product.create(name: "Eggs")
 chicken = Product.create(name: "Chicken")
 spinach = Product.create(name: "Spinach")
 apples = Product.create(name: "Apples")
-kale = Product.create(name: "Lucinado Kale")
+kale = Product.create(name: "Kale")
 peaches = Product.create(name: "Peaches")
 beets = Product.create(name: "Beets")
 
