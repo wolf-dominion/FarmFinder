@@ -10,7 +10,7 @@ About the Data
 We built the app to eventually be compatible with the Local Harvest API which has data for small farms all over the country. Unfortunately, the API is not publicly available but we are talking with Local Harvest now for permission to use there data. For now, we’ve hand-seeded a few examples of farms in the denver area.
 
 Video
-(insert video here)
+https://www.youtube.com/watch?time_continue=1&v=xlPnSBfAT4Y&feature=emb_logo
 
 What We Learned
 1. We learned how to integrate a tty-prompt ruby gem menu display with an enumerble to create a dynamic application. Data can be added and updated without having to rewrite any code in the program.
